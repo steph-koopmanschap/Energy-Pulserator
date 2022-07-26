@@ -94,8 +94,9 @@ class Pulser {
             console.log("Column: " + this.column);
             console.log(error);
         }
-        //Remove its own energy by 2
-        this.energy -= 2;
+        //Remove its own energy by input slider value
+        this.energy -= inputSlider.value;
+
         //Register when this pulse last fired
         this.timeLastPulsed = new Date();
 
@@ -131,6 +132,10 @@ class Pulser {
 //=-=-=-=-=-= =-=-=-=-=-=
 
 // O+O+O+O+O+O USER INPUT FUNCTIONS O+O+O+O+O+O+0
+
+//Slider input to determine the energy loss per pulse
+const inputSlider = document.getElementById('energyLossPerPulseSlider');
+const sliderOutput = document.getElementById('sliderValueDisplay');  
 
 //Send a pulse across the energy field.
 //Adds +1 energy to all the Pulsers in the grid
@@ -188,6 +193,7 @@ function update() {
             PulserGrid[i][j].update();
         }
     }
+    sliderOutput.innerHTML = inputSlider.value;
 }
 
 function draw() {
