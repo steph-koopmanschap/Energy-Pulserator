@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Energy Pulserator</title>
+  <meta name="description" content="Energy Pulserator">
+  <meta name="author" content="Steph Koopmanschap">
+
+  <meta property="og:title" content="Energy Pulserator">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://energy-pulserator.lan/index.html/">
+  <meta property="og:description" content="Energy Pulserator">
+  <meta property="og:image" content="image.png">
+
+  <!-- Place favicon.ico in the root directory -->
+  <link rel="icon" href="/favicon.ico">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="./css/style.css">
+
+</head>
+<body>
+    <center>
+      <h1>Energy Pulserator</h1>
+      <h2>Version 1.0</h2>
+      <p></p>
+
+      <h3>Click the button below to send an energy pulse across the energy field</h3>
+      <button onclick="globalPulse()">PULSE!</button>
+      <br />
+      <br />
+      <button onclick="localPulseRandom()">LOCAL PULSE</button>
+      <br />
+      <br />
+      <button onclick="resetGrid()">RESET</button>
+      <button onclick="pauseToggle()">PAUSE / UNPAUSE</button>
+    </center>
+    <h3>Rules of the energy field</h3>
+    <ol>
+      <li>The energy field is composed of a grid. And each point in the grid is called a "Pulser".</li>
+      <li>At the start. Each Pulser has a random energy level assigned from 0 to 9.</li>
+      <li>If a Pulser has 0 energy it is black.</li>
+      <li>If a Pulser has less than 5 energy it is green.</li>
+      <li>If a Pulser has more than 5 energy, but less than 10 energy it is yellow.</li>
+      <li>If a Pulser has more than 10 energy it is red.</li>
+
+      <li>When a Pulser has more than 10 energy it will create a pulse every second which <br /> 
+          increases the energy of every Pulser directly around it by either 1 or 2 and decreases its own energy by 2. <br />
+          It also turns white momentarily.
+      </li>
+      <li>Pressing the "PULSE" button increases the energy of every Pulser in the grid by 1.</li>
+      <li>Pressing the "LOCAL PULSE" button increases the energy of a random pulsr in the field by 1.</li>
+      <li>Pressing the "RESET" button resets the energy field to point 2.</li>
+    </ol>
+    <br />
+    <br />
+    <center>
+      <h4>For debugging</h4>
+      <button onclick="end()">END</button>
+    </center>
+
+    
+    <script src="main.js"></script>
+
+</body>
+</html>
