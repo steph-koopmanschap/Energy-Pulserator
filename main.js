@@ -20,7 +20,7 @@ var globalCock = null;
 var isRunning = false;
 //Debugging mode for verbose logging
 //Do note that debugMode slows down the program
-var DebugMode = false;
+var DebugMode = true;
 //Verboseness of the debugging log
 //level 1 = small
 //level 2 = high
@@ -33,6 +33,9 @@ var pulserSize = 10;
 var gridColumns = 80; //ScreenWidth / pulserSize
 var gridRows = 60; //ScreenHeight / pulserSize
 var PulserGrid;
+var totalFieldEnergy = 0;
+var averageEnergyPulsers = 0;
+var statisticsTimer = null;
 
 // ======  =========
 
@@ -64,31 +67,26 @@ class Pulser {
         //Increase energy of its touching neighbours
         try {
             this.color = "white";
-
-            /* Still experimenting code 
-            let r = this.row;
-            let c = this.column;
-            if (r-1 < 0) {
-                r = 0;
-            }
-            if (c-1 < 0) {
-                c = 0;
-            }
-            if (r+1 > gridRows) {
-                r = gridRows;
-            }
-            if (c+1 > gridColumns) {
-                c = gridColumns
-            }
-            */
+            //The if statemements below prevent out of bounds errors. 
+            //It checks if the neighbour of the Pulser is outside of the screen
             //top
-            PulserGrid[this.row-1][this.column].energy += 1;
+            if (!(this.row-1 < 0)) {
+                PulserGrid[this.row-1][this.column].energy += 1;
+            }
             //bottom
-            PulserGrid[this.row+1][this.column].energy += 1;
+            if (!(this.row+1 > gridRows-1)) {
+                PulserGrid[this.row+1][this.column].energy += 1;
+            }
+            
             //left
-            PulserGrid[this.row][this.column-1].energy += 1;
+            if (!(this.column-1 < 0)) {
+                PulserGrid[this.row][this.column-1].energy += 1;
+            }
             //right
-            PulserGrid[this.row][this.column+1].energy += 1;
+            if (!(this.column+1 > gridColumns-1)) {
+                PulserGrid[this.row][this.column+1].energy += 1;
+            }
+            
         } catch (error) {
             console.log("Row: " + this.row);
             console.log("Column: " + this.column);
@@ -136,6 +134,8 @@ class Pulser {
 //Slider input to determine the energy loss per pulse
 const inputSlider = document.getElementById('energyLossPerPulseSlider');
 const sliderOutput = document.getElementById('sliderValueDisplay');  
+const totalEnergyOutput = document.getElementById('totalEnergy');  
+const avrgEnergyOutput = document.getElementById('averageEnergy');  
 
 //Send a pulse across the energy field.
 //Adds +1 energy to all the Pulsers in the grid
@@ -163,6 +163,8 @@ function resetGrid() {
             PulserGrid[i][j].energy = randIntRange(0, 9);
         }
     }
+
+    calcStatistics();
 }
 
 //Pause or unpause the game (prevents the code inside the main loop from executing, but still executes the main loop)
@@ -177,6 +179,7 @@ function end() {
     isRunning = false;
     clearTimeout(globalCock);
     clearInterval(debugClock);
+    clearInterval(statisticsTimer);
     clearCanvas();
 }
 
@@ -306,6 +309,23 @@ function mainLoop() {
     }, frameRate);
 }
 
+function calcStatistics() {
+    //Reset the previous calculations
+    totalFieldEnergy = 0;
+    averageEnergyPulsers = 0;
+    //Calculate total
+    for (let i = 0; i < gridRows; i++) {
+        for (let j = 0; j < gridColumns; j++) { 
+            totalFieldEnergy += PulserGrid[i][j].energy;
+        }
+    }
+    //Calculate average
+    averageEnergyPulsers = Math.floor(totalFieldEnergy / (gridRows * gridColumns));
+    //Output to screen
+    totalEnergyOutput.innerHTML = totalFieldEnergy;
+    avrgEnergyOutput.innerHTML = averageEnergyPulsers;
+}
+
 //Do things that should happen only once at the start of the game
 function startGame() {
     //Create the Pulser Grid 
@@ -328,6 +348,9 @@ function startGame() {
             idCounter += 1;
         }
     }
+
+    //Calculate the total energy in the field and the average energy per pulser every 2 seconds
+    statisticsTimer = setInterval(calcStatistics, 2000);
 
     //remove variables no longer needed
     idCounter = null;
