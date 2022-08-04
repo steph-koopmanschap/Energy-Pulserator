@@ -20,7 +20,7 @@ var globalCock = null;
 var isRunning = false;
 //Debugging mode for verbose logging
 //Do note that debugMode slows down the program
-var DebugMode = true;
+var DebugMode = false;
 //Verboseness of the debugging log
 //level 1 = small
 //level 2 = high
@@ -108,6 +108,7 @@ class Pulser {
             this.energy = 0;
             this.color = "black";
         } 
+        //Determine colors
         else if (this.energy >= 1 && this.energy <= 5) {
             this.color = "green";
         } 
@@ -146,6 +147,12 @@ function globalPulse() {
             PulserGrid[i][j].energy += 1;
         }
     }
+}
+
+//Selects a random Pulser and set its energy to 10 so will start pulsing.
+function createPulser() {
+    console.log("Pulser created");
+    PulserGrid[randIntRange(0, gridRows)][randIntRange(0, gridColumns)].energy = 10;
 }
 
 //Send a pulse across the energy field.
@@ -333,18 +340,12 @@ function startGame() {
     for (let i = 0; i < gridRows; i++) {
         PulserGrid[i] = new Array(gridColumns);
     }
-    //Set the screen location of the Pulsers
-    let pulserScreenPositions = [];
-    for (let i = 0; i < ScreenWidth; i += pulserSize) {
-        for (let j = 0; j < ScreenHeight; j += pulserSize) {
-            pulserScreenPositions.push([i, j]);
-        }
-    }
     //Fill the grid with Pulsers
     let idCounter = 0;
     for (let i = 0; i < gridRows; i++) {
         for (let j = 0; j < gridColumns; j++) { 
-            PulserGrid[i][j] = new Pulser(idCounter, randIntRange(0, 9), [i, j], pulserScreenPositions[idCounter].slice());
+            //For some reason columns and rows are reversed in rendering on screen
+            PulserGrid[i][j] = new Pulser(idCounter, randIntRange(0, 9), [i, j], [j*pulserSize, i*pulserSize]);
             idCounter += 1;
         }
     }
