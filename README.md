@@ -17,3 +17,7 @@ Open index.html with your favorite web browser.
 - Pressing the "LOCAL PULSE" button increases the energy of a random pulsr in the field by 1.
 - Pressing the "RESET" button resets the energy field to point 2.
 
+## Screenshots
+
+![pulserator screenshot](/screenshot.png?raw=true)
+
